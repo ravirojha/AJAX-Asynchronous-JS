@@ -52,7 +52,7 @@ const renderCountry = (data, className = '') => {
   countriesContainer.insertAdjacentHTML('beforeend', html);
   countriesContainer.style.opacity = 1;
 };
-
+/*
 const getCountryAndNeighbour = country => {
   //AJAX call country 1
   const request = new XMLHttpRequest();
@@ -86,3 +86,24 @@ const getCountryAndNeighbour = country => {
 };
 
 getCountryAndNeighbour('usa');
+*/
+
+// const getCountryData = country => {
+//   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+//     .then(function (response) {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[1]);
+//     });
+// };
+
+const getCountryData = country => {
+  fetch(`https://restcountries.eu/rest/v2/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data[1]));
+};
+
+getCountryData('india');
