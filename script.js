@@ -101,9 +101,20 @@ getCountryAndNeighbour('usa');
 // };
 
 const getCountryData = country => {
+  // country 1
   fetch(`https://restcountries.eu/rest/v2/name/${country}`)
     .then(response => response.json())
-    .then(data => renderCountry(data[1]));
+    .then(data => {
+      renderCountry(data[1]);
+      const neighbour = data[1].borders[0];
+
+      if (!neighbour) return;
+
+      // country 2
+      return fetch(`https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+    })
+    .then(response => response.json())
+    .then(data => renderCountry(data, 'neighbour'));
 };
 
 getCountryData('india');
