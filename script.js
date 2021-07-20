@@ -19,12 +19,12 @@ const renderCountry = (data, className = '') => {
   </article>
   `;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 const renderError = msg => {
   countriesContainer.insertAdjacentText('beforeend', msg);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 
 ///////////////////////////////////////
@@ -105,12 +105,12 @@ getCountryAndNeighbour('usa');
 //       renderCountry(data[1]);
 //     });
 // };
-
+/*
 const getJSON = async (url, errorMsg = 'Something went wrong') => {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
   return await response.json();
-};
+};*/
 
 // const getCountryData = country => {
 //   // country 1
@@ -144,10 +144,9 @@ const getJSON = async (url, errorMsg = 'Something went wrong') => {
 //       countriesContainer.style.opacity = 1;
 //     });
 // };
-
+/*
 const getCountryData = country => {
   // country 1
-
   getJSON(
     `https://restcountries.eu/rest/v2/name/${country}`,
     `Country not found`
@@ -176,3 +175,31 @@ const getCountryData = country => {
 btn.addEventListener('click', function () {
   getCountryData('india');
 });
+*/
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+const whereAmI = async () => {
+  //GeoLocation
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  //Reverse geocoding
+  const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
+  const dataGeo = await resGeo.json();
+  console.log(dataGeo);
+
+  //country data
+  const res = await fetch(
+    `https://restcountries.eu/rest/v2/name/${dataGeo.country}`
+  );
+  const data = await res.json();
+  console.log(data);
+  renderCountry(data[1]);
+};
+
+whereAmI();
+console.log('First');
