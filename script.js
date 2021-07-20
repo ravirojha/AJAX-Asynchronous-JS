@@ -192,7 +192,6 @@ const whereAmI = async () => {
     const resGeo = await fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`);
     const dataGeo = await resGeo.json();
     if (!resGeo.ok) throw new Error('Problem getting location data');
-    console.log(dataGeo);
 
     //country data
     const res = await fetch(
@@ -200,12 +199,21 @@ const whereAmI = async () => {
     );
     if (!res.ok) throw new Error('Problem getting country');
     const data = await res.json();
-    console.log(data);
     renderCountry(data[1]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.country}`;
   } catch (err) {
-    console.error(err);
+    console.error(`${err} `);
     renderError(` ${err.message}`);
+
+    //Reject promise returned from async function
+    throw err;
   }
 };
 
-whereAmI();
+console.log(`1: Will get location `);
+
+whereAmI()
+  .then(city => console.log(`2: ${city}`))
+  .catch(err => console.error(`2: ${err.message} `))
+  .finally(() => console.log(`3: Finished getting location`));
